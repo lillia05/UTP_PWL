@@ -116,7 +116,7 @@
                 </p>
             </div>
 
-            <div class="mt-8 pt-6 border-t border-gray-200">
+            <!-- <div class="mt-8 pt-6 border-t border-gray-200">
                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <p class="text-xs font-semibold text-blue-900 mb-2 flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -124,7 +124,7 @@
                         </svg>
                         Demo Account
                     </p>
-                    <div class="space-y-1.5 text-xs text-blue-800">
+                    <!-- <div class="space-y-1.5 text-xs text-blue-800">
                         <div class="flex items-start gap-2">
                             <span class="font-semibold min-w-[70px]">Bansus:</span>
                             <span class="font-mono">bansus@ilkom.ac.id / password</span>
@@ -133,9 +133,9 @@
                             <span class="font-semibold min-w-[70px]">Mahasiswa:</span>
                             <span class="font-mono">mahasiswa@ilkom.ac.id / password</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
-            </div>
+            </div> 
         </div>
 
         <p class="text-center text-sm text-gray-500">

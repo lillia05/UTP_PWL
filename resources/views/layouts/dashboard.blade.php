@@ -14,7 +14,7 @@
     </style>
 </head>
 <body class="min-h-screen bg-[#f3f6fa]">
-    <nav class="bg-gradient-to-b from-[#202c46] to-[#1b2336] shadow-xl rounded-b-2xl px-24 py-5 flex items-center justify-between sticky top-0 z-40 w-full">
+    <nav class="bg-blue-500 bg-gradient-to-br from-blue-400 to-blue-600 shadow-xl rounded-b-2xl px-24 py-5 flex items-center justify-between sticky top-0 z-40 w-full">
         <span class="text-white text-2xl font-bold tracking-wide">
             @if(auth()->user()->isBansus())
                 Dashboard Bansus

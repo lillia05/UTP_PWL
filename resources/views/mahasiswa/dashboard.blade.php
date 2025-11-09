@@ -9,7 +9,7 @@
                 <h2 class="text-4xl font-extrabold text-gray-900 leading-tight mb-0">Selamat Datang,
                     {{ strtok(auth()->user()->name, ' ') }}!</h2>
                 <div class="mt-3 text-gray-500 text-lg font-normal">Kelola pemesanan laboratorium Anda dengan mudah bersama
-                    SiBookLab!.</div>
+                    SiBookLab!</div>
             </div>
             <div class="flex gap-3 flex-col md:flex-row items-start md:items-center pt-2">
                 <a href="{{ route('mahasiswa.jadwal.index') }}"
