@@ -3,117 +3,140 @@
 @section('title', 'Detail Booking')
 
 @section('content')
-<div class="px-4 py-6 sm:px-0">
+<div class="w-full px-6 md:px-8 lg:px-12">
     <div class="mb-6">
-        <a href="{{ route('bansus.bookings.index') }}" class="text-blue-600 hover:text-blue-800 text-sm">
-            ← Kembali ke Daftar Booking
+        <a href="{{ route('bansus.bookings.index') }}" 
+           class="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-base transition">
+            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Kembali ke Daftar Booking
         </a>
     </div>
 
-    <div class="max-w-3xl mx-auto bg-white shadow rounded-lg">
-        <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h3 class="text-lg font-semibold text-gray-900">Detail Booking</h3>
+    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-6 mb-8">
+        <div>
+            <h2 class="text-4xl font-extrabold text-gray-900 leading-tight mb-0">Detail Booking</h2>
+            <div class="mt-3 text-gray-500 text-lg font-normal">Lihat informasi lengkap pemesanan laboratorium</div>
+        </div>
+        <div>
             @if($booking->status === 'pending')
-                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                <span class="px-5 py-2 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-800 shadow-sm">
                     Pending
                 </span>
             @elseif($booking->status === 'approved')
-                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+                <span class="px-5 py-2 text-sm font-semibold rounded-full bg-green-100 text-green-800 shadow-sm">
                     Disetujui
                 </span>
             @else
-                <span class="px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
+                <span class="px-5 py-2 text-sm font-semibold rounded-full bg-red-100 text-red-800 shadow-sm">
                     Ditolak
                 </span>
             @endif
         </div>
+    </div>
 
-        <div class="p-6 space-y-6">
+    <div class="bg-white shadow-md rounded-xl ring-1 ring-gray-200 p-8 space-y-8">
+        {{-- Informasi Mahasiswa --}}
+        <div>
+            <h4 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Informasi Mahasiswa</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+                <div>
+                    <div class="text-gray-500 font-medium">Nama</div>
+                    <div class="text-gray-900 font-semibold mt-1">{{ $booking->user->name }}</div>
+                </div>
+                <div>
+                    <div class="text-gray-500 font-medium">NIM</div>
+                    <div class="text-gray-900 font-semibold mt-1">{{ $booking->user->nim }}</div>
+                </div>
+                <div>
+                    <div class="text-gray-500 font-medium">Email</div>
+                    <div class="text-gray-900 font-semibold mt-1">{{ $booking->user->email }}</div>
+                </div>
+                <div>
+                    <div class="text-gray-500 font-medium">Jurusan</div>
+                    <div class="text-gray-900 font-semibold mt-1">{{ $booking->user->jurusan }}</div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Informasi Booking --}}
+        <div>
+            <h4 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Informasi Booking</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
+                <div>
+                    <div class="text-gray-500 font-medium">Ruangan</div>
+                    <div class="text-gray-900 font-semibold mt-1">{{ $booking->lab->nama ?? 'Lab Dihapus' }}</div>
+                </div>
+                <div>
+                    <div class="text-gray-500 font-medium">Tanggal</div>
+                    <div class="text-gray-900 font-semibold mt-1">{{ $booking->tanggal->format('d/m/Y') }}</div>
+                </div>
+                <div>
+                    <div class="text-gray-500 font-medium">Hari</div>
+                    <div class="text-gray-900 font-semibold mt-1">{{ $booking->hari }}</div>
+                </div>
+                <div>
+                    <div class="text-gray-500 font-medium">Waktu</div>
+                    <div class="text-gray-900 font-semibold mt-1">{{ $booking->waktu }}</div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Keperluan --}}
+        <div>
+            <h4 class="text-lg font-bold text-gray-800 mb-3 border-b pb-2">Keperluan</h4>
+            <p class="text-gray-900 text-sm leading-relaxed">{{ $booking->keperluan }}</p>
+        </div>
+
+        {{-- Catatan --}}
+        @if($booking->catatan)
             <div>
-                <h4 class="text-sm font-medium text-gray-500 mb-3">Informasi Mahasiswa</h4>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <div class="text-xs text-gray-500">Nama</div>
-                        <div class="mt-1 text-sm text-gray-900 font-medium">{{ $booking->user->name }}</div>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-500">NIM</div>
-                        <div class="mt-1 text-sm text-gray-900">{{ $booking->user->nim }}</div>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-500">Email</div>
-                        <div class="mt-1 text-sm text-gray-900">{{ $booking->user->email }}</div>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-500">Jurusan</div>
-                        <div class="mt-1 text-sm text-gray-900">{{ $booking->user->jurusan }}</div>
-                    </div>
-                </div>
+                <h4 class="text-lg font-bold text-gray-800 mb-3 border-b pb-2">Catatan</h4>
+                <p class="text-gray-900 text-sm leading-relaxed">{{ $booking->catatan }}</p>
             </div>
+        @endif
 
-            <div class="border-t pt-6">
-                <h4 class="text-sm font-medium text-gray-500 mb-3">Informasi Booking</h4>
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <div class="text-xs text-gray-500">Ruangan</div>
-                        <div class="mt-1 text-sm text-gray-900 font-semibold">{{ $booking->lab->nama ?? 'Lab Dihapus' }}</div>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-500">Tanggal</div>
-                        <div class="mt-1 text-sm text-gray-900">{{ $booking->tanggal->format('d/m/Y') }}</div>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-500">Hari</div>
-                        <div class="mt-1 text-sm text-gray-900">{{ $booking->hari }}</div>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-500">Waktu</div>
-                        <div class="mt-1 text-sm text-gray-900">{{ $booking->waktu }}</div>
-                    </div>
-                </div>
-            </div>
-
+        {{-- Tindakan Admin --}}
+        @if($booking->status === 'pending')
             <div>
-                <div class="text-xs text-gray-500">Keperluan</div>
-                <div class="mt-1 text-sm text-gray-900">{{ $booking->keperluan }}</div>
-            </div>
-
-            @if($booking->catatan)
-                <div class="border-t pt-6">
-                    <div class="text-xs text-gray-500">Catatan</div>
-                    <div class="mt-1 text-sm text-gray-900">{{ $booking->catatan }}</div>
-                </div>
-            @endif
-
-            @if($booking->status === 'pending')
-                <div class="border-t pt-6">
-                    <h4 class="text-sm font-medium text-gray-900 mb-4">Tindakan</h4>
-                    
-                    <form action="{{ route('bansus.bookings.approve', $booking) }}" method="POST" class="mb-3">
+                <h4 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Tindakan</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {{-- Form Setujui --}}
+                    <form action="{{ route('bansus.bookings.approve', $booking) }}" method="POST" class="bg-green-50 p-5 rounded-lg border border-green-200 shadow-sm">
                         @csrf
                         @method('PATCH')
-                        <label for="approve_catatan" class="block text-sm font-medium text-gray-700 mb-2">Catatan (Opsional)</label>
-                        <textarea name="catatan" id="approve_catatan" rows="2" maxlength="500" class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-sm mb-3"></textarea>
-                        <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-md">
+                        <label for="approve_catatan" class="block text-sm font-medium text-gray-700 mb-2">
+                            Catatan (Opsional)
+                        </label>
+                        <textarea name="catatan" id="approve_catatan" rows="2" maxlength="500"
+                                  class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 text-sm mb-4"></textarea>
+                        <button type="submit" 
+                                class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-2.5 px-4 rounded-lg shadow-md transition">
                             ✓ Setujui Booking
                         </button>
                     </form>
 
-                    <form action="{{ route('bansus.bookings.reject', $booking) }}" method="POST">
+                    {{-- Form Tolak --}}
+                    <form action="{{ route('bansus.bookings.reject', $booking) }}" method="POST" class="bg-red-50 p-5 rounded-lg border border-red-200 shadow-sm">
                         @csrf
                         @method('PATCH')
-                        <label for="reject_catatan" class="block text-sm font-medium text-gray-700 mb-2">Alasan Penolakan <span class="text-red-500">*</span></label>
-                        <textarea name="catatan" id="reject_catatan" rows="2" maxlength="500" required class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 text-sm mb-3"></textarea>
-                        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-md">
+                        <label for="reject_catatan" class="block text-sm font-medium text-gray-700 mb-2">
+                            Alasan Penolakan <span class="text-red-500">*</span>
+                        </label>
+                        <textarea name="catatan" id="reject_catatan" rows="2" maxlength="500" required
+                                  class="block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 text-sm mb-4"></textarea>
+                        <button type="submit" 
+                                class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2.5 px-4 rounded-lg shadow-md transition">
                             ✗ Tolak Booking
                         </button>
                     </form>
                 </div>
-            @endif
-
-            <div class="border-t pt-4 text-xs text-gray-500">
-                Dibuat pada: {{ $booking->created_at->format('d/m/Y H:i') }}
             </div>
+        @endif
+
+        <div class="text-xs text-gray-500 pt-4 border-t">
+            Dibuat pada: {{ $booking->created_at->format('d/m/Y H:i') }}
         </div>
     </div>
 </div>

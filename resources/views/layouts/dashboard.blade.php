@@ -7,54 +7,29 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Dashboard')</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-gray-100">
-    <nav class="bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <h1 class="text-xl font-bold text-gray-800">
-                        @if(auth()->user()->isBansus())
-                            Dashboard Bansus
-                        @else
-                            Dashboard Mahasiswa
-                        @endif
-                    </h1>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <span class="text-sm text-gray-600">{{ auth()->user()->name }}</span>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="text-sm text-red-600 hover:text-red-800 font-medium">
-                            Logout
-                        </button>
-                    </form>
-                </div>
-            </div>
+<body class="min-h-screen bg-[#f3f6fa]">
+    <nav class="bg-gradient-to-b from-[#202c46] to-[#1b2336] shadow-xl rounded-b-2xl px-24 py-5 flex items-center justify-between sticky top-0 z-40 w-full">
+        <span class="text-white text-2xl font-bold tracking-wide">
+            @if(auth()->user()->isBansus())
+                Dashboard Bansus
+            @else
+                SiBookLab
+            @endif
+        </span>
+        <div class="flex items-center gap-8">
+            <span class="text-white text-lg font-medium">{{ auth()->user()->name }}</span>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="px-5 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-base font-semibold transition shadow-md">Logout</button>
+            </form>
         </div>
     </nav>
-
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-        @if (session('success'))
-            <div class="mb-4 bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        @if ($errors->any())
-            <div class="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
-                <ul class="list-disc list-inside text-sm">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
+    <main class="py-10 px-12">
         @yield('content')
     </main>
 </body>
