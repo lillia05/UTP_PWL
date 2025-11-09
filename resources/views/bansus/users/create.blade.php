@@ -87,20 +87,24 @@
                         @enderror
                     </div>
 
-                    <div>
-                        <label for="jurusan" class="block text-sm font-medium text-gray-700">Jurusan <span class="text-red-500">*</span></label>
-                        <input 
-                            type="text" 
-                            name="jurusan" 
-                            id="jurusan" 
-                            value="{{ old('jurusan', 'Ilmu Komputer') }}"
-                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('jurusan') border-red-500 @enderror"
-                        >
-                        @error('jurusan')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
+                        <div class="mb-4">
+                            <label for="jurusan" class="block text-sm font-medium text-gray-700">
+                             Jurusan <span class="text-red-500">*</span>
+                             </label>
+
+                            <input 
+                                type="text" 
+                                name="jurusan" 
+                                id="jurusan" 
+                                value="{{ old('jurusan', 'Ilmu Komputer') }}"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('jurusan') border-red-500 @enderror"
+                            >
+
+                            @error('jurusan')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                    
             </div>
 
             <div>
