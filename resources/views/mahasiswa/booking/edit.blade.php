@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Booking Baru')
+@section('title', 'Edit Booking')
 
 @section('content')
     <div class="w-full px-6 md:px-8 lg:px-12">
@@ -15,18 +15,32 @@
         </div>
 
         <div class="mb-8 text-center">
-            <h2 class="text-4xl font-extrabold text-gray-900 leading-tight mb-0">Booking Baru</h2>
-            <div class="mt-3 text-gray-500 text-lg font-normal">Isi form di bawah untuk membuat booking laboratorium</div>
+            <h2 class="text-4xl font-extrabold text-gray-900 leading-tight mb-0">Edit Booking</h2>
+            <div class="mt-3 text-gray-500 text-lg font-normal">Perbarui data booking laboratorium Anda</div>
         </div>
 
         <div class="max-w-4xl mx-auto bg-white shadow-md rounded-xl">
             <div class="px-8 py-6 border-b border-gray-200">
-                <h3 class="text-2xl font-bold text-gray-900">Form Booking Laboratorium</h3>
+                <h3 class="text-2xl font-bold text-gray-900">Form Edit Booking</h3>
             </div>
 
-            <form method="POST" action="{{ route('mahasiswa.booking.store') }}" class="p-8 space-y-7" id="booking-form"
-                novalidate>
+            <form method="POST" action="{{ route('mahasiswa.booking.update', $booking) }}" class="p-8 space-y-7"
+                id="booking-form" novalidate>
                 @csrf
+                @method('PATCH')
+
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-4">
+                    <div class="flex items-center">
+                        <svg class="h-5 w-5 text-blue-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <p class="text-sm font-medium text-blue-800">
+                            Hanya booking dengan status <strong>pending</strong> yang bisa diedit
+                        </p>
+                    </div>
+                </div>
 
                 <div>
                     <label for="lab_id" class="block text-sm font-semibold text-gray-700 mb-2">
@@ -36,7 +50,8 @@
                         class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         <option value="">-- Pilih Ruangan --</option>
                         @foreach ($labs as $lab)
-                            <option value="{{ $lab->id }}" {{ old('lab_id') == $lab->id ? 'selected' : '' }}>
+                            <option value="{{ $lab->id }}"
+                                {{ old('lab_id', $booking->lab_id) == $lab->id ? 'selected' : '' }}>
                                 {{ $lab->nama }} (Kapasitas: {{ $lab->kapasitas }} orang)
                             </option>
                         @endforeach
@@ -47,8 +62,9 @@
                     <label for="tanggal" class="block text-sm font-semibold text-gray-700 mb-2">
                         Tanggal <span class="text-red-500">*</span>
                     </label>
-                    <input type="date" name="tanggal" id="tanggal" value="{{ old('tanggal') }}"
-                        min="{{ date('Y-m-d') }}" max="{{ date('Y-m-d', strtotime('+10 years')) }}"
+                    <input type="date" name="tanggal" id="tanggal"
+                        value="{{ old('tanggal', $booking->tanggal->format('Y-m-d')) }}" min="{{ date('Y-m-d') }}"
+                        max="{{ date('Y-m-d', strtotime('+10 years')) }}"
                         class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                     <p class="mt-2 text-sm text-gray-500 flex items-center gap-1">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -57,9 +73,6 @@
                         </svg>
                         Hanya hari Senin - Jumat
                     </p>
-                    <div id="tanggal-error"
-                        class="hidden mt-3 p-4 bg-red-50 border border-red-200 text-sm text-red-700 rounded-lg font-medium">
-                    </div>
                 </div>
 
                 <div>
@@ -70,8 +83,8 @@
                         class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                         <option value="">-- Pilih Waktu --</option>
                         @foreach ($waktu as $w)
-                            <option value="{{ $w }}" {{ old('waktu') === $w ? 'selected' : '' }}>
-                                {{ $w }}</option>
+                            <option value="{{ $w }}"
+                                {{ old('waktu', $booking->waktu) === $w ? 'selected' : '' }}>{{ $w }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -81,8 +94,11 @@
                         Keperluan <span class="text-red-500">*</span>
                     </label>
                     <textarea name="keperluan" id="keperluan" rows="5" required maxlength="500"
-                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition resize-none">{{ old('keperluan') }}</textarea>
-                    <p class="mt-2 text-sm text-gray-500">Maksimal 500 karakter</p>
+                        class="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition resize-none">{{ old('keperluan', $booking->keperluan) }}</textarea>
+                    <p class="mt-2 text-sm text-gray-500 flex justify-between">
+                        <span>Maksimal 500 karakter</span>
+                        <span><span id="char-count">{{ strlen(old('keperluan', $booking->keperluan)) }}</span>/500</span>
+                    </p>
                 </div>
 
                 <div id="availability-message" class="hidden p-4 rounded-lg font-medium"></div>
@@ -97,31 +113,42 @@
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
-                        Ajukan Booking
+                        Update Booking
                     </button>
                 </div>
             </form>
         </div>
+
+        <div class="max-w-4xl mx-auto mt-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <p class="text-sm text-yellow-700 font-medium mb-1">Catatan:</p>
+            <ul class="list-disc list-inside text-sm text-yellow-700 space-y-1">
+                <li>Setelah diedit, status booking kembali menjadi <strong>pending</strong></li>
+                <li>Booking yang sudah <strong>approved</strong> atau <strong>rejected</strong> tidak bisa diubah</li>
+                <li>Pastikan ruangan tersedia pada waktu yang dipilih</li>
+            </ul>
+        </div>
     </div>
 
     <script>
-        // --- Ambil elemen DOM ---
+        const keperluan = document.getElementById('keperluan');
+        const charCount = document.getElementById('char-count');
+        keperluan.addEventListener('input', () => charCount.textContent = keperluan.value.length);
+
         const labSelect = document.getElementById('lab_id');
         const tanggalInput = document.getElementById('tanggal');
         const waktuSelect = document.getElementById('waktu');
         const availabilityMessage = document.getElementById('availability-message');
-        const bookingForm = document.getElementById('booking-form');
-        const tanggalError = document.getElementById('tanggal-error');
+        const bookingId = {{ $booking->id }};
 
-        // --- Fungsi utama: cek ketersediaan ruangan ---
         function checkAvailability() {
             const lab_id = labSelect.value;
             const tanggal = tanggalInput.value;
             const waktu = waktuSelect.value;
 
             if (lab_id && tanggal && waktu) {
-                fetch(`{{ route('mahasiswa.booking.check') }}?lab_id=${lab_id}&tanggal=${tanggal}&waktu=${waktu}`)
-                    .then(response => response.json())
+                fetch(
+                        `{{ route('mahasiswa.booking.check') }}?lab_id=${lab_id}&tanggal=${tanggal}&waktu=${waktu}&booking_id=${bookingId}`)
+                    .then(res => res.json())
                     .then(data => {
                         availabilityMessage.classList.remove('hidden');
                         if (data.available) {
@@ -139,7 +166,7 @@
             }
         }
 
-        // --- Validasi hari (Senin–Jumat) ---
+        // Validasi agar hanya hari Senin–Jumat yang bisa dipilih
         tanggalInput.addEventListener('change', () => {
             const date = new Date(tanggalInput.value);
             const day = date.getDay(); // 0 = Minggu, 6 = Sabtu
@@ -152,61 +179,15 @@
                     confirmButtonColor: '#3b82f6'
                 });
                 tanggalInput.value = ''; // kosongkan input
-                availabilityMessage.classList.add('hidden'); // sembunyikan hasil availability
             } else {
-                checkAvailability(); // lanjut cek ruangan jika valid
+                checkAvailability(); // lanjutkan cek ketersediaan
             }
         });
 
-        // --- Event listener untuk perubahan data ---
         labSelect.addEventListener('change', checkAvailability);
+        tanggalInput.addEventListener('change', checkAvailability);
         waktuSelect.addEventListener('change', checkAvailability);
 
-        // --- Validasi manual sebelum submit ---
-        tanggalInput.addEventListener('input', function() {
-            tanggalError.classList.add('hidden');
-            tanggalError.textContent = '';
-        });
-
-        bookingForm.addEventListener('submit', function(event) {
-            let isValid = true;
-            let errorMessage = '';
-
-            const tanggalValue = tanggalInput.value;
-            const minDateStr = tanggalInput.getAttribute('min');
-            const maxDateStr = tanggalInput.getAttribute('max');
-
-            if (!tanggalValue) {
-                isValid = false;
-                errorMessage = 'Tanggal wajib diisi.';
-            } else {
-                const selectedDate = new Date(tanggalValue + 'T00:00:00');
-                const minDate = new Date(minDateStr + 'T00:00:00');
-                const maxDate = new Date(maxDateStr + 'T00:00:00');
-
-                if (selectedDate < minDate) {
-                    isValid = false;
-                    errorMessage = 'Tanggal tidak boleh lebih awal dari hari ini (' + minDate.toLocaleDateString(
-                        'id-ID') + ').';
-                } else if (selectedDate > maxDate) {
-                    isValid = false;
-                    errorMessage = 'Tanggal tidak boleh lebih dari ' + maxDate.toLocaleDateString('id-ID') + '.';
-                }
-            }
-
-            if (!isValid) {
-                event.preventDefault();
-                tanggalError.textContent = errorMessage;
-                tanggalError.classList.remove('hidden');
-            } else {
-                tanggalError.classList.add('hidden');
-                tanggalError.textContent = '';
-            }
-
-            if (!bookingForm.checkValidity()) {
-                event.preventDefault();
-            }
-        });
+        checkAvailability();
     </script>
-
 @endsection

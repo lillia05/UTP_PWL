@@ -4,13 +4,23 @@
 
 @section('content')
 <div class="w-full px-6 md:px-8 lg:px-12">
-    <div class="mb-6">
+    <div class="mb-6 flex justify-between items-center">
         <a href="{{ route('mahasiswa.dashboard') }}" class="inline-flex items-center text-blue-600 hover:text-blue-800 font-semibold text-base transition">
             <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
             </svg>
             Kembali ke Dashboard
         </a>
+
+        @if($booking->status === 'pending')
+            <a href="{{ route('mahasiswa.booking.edit', $booking->id) }}" 
+               class="inline-flex items-center px-5 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition">
+                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232a2.5 2.5 0 013.536 3.536L7.5 20.036H3v-4.5l12.232-10.304z"/>
+                </svg>
+                Edit Booking
+            </a>
+        @endif
     </div>
 
     <div class="mb-8 text-center">

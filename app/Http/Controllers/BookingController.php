@@ -34,10 +34,12 @@ class BookingController extends Controller
             'keperluan' => 'required|string|max:500',
         ]);
 
+        // Get hari from tanggal
         $tanggal = Carbon::parse($validated['tanggal']);
         $hariIndo = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
         $hari = $hariIndo[$tanggal->dayOfWeek];
 
+        // Validate hari (only Senin-Jumat)
         if (!in_array($hari, ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'])) {
             return back()->withErrors(['tanggal' => 'Booking hanya bisa dilakukan untuk hari Senin sampai Jumat.'])->withInput();
         }
@@ -67,19 +69,99 @@ class BookingController extends Controller
 
     public function show(Booking $booking)
     {
-        if ($booking->user_id != auth()->id()) {
+        // Ensure user can only see their own booking
+        if ($booking->user_id !== auth()->id()) {
             abort(403);
         }
 
         return view('mahasiswa.booking.show', compact('booking'));
     }
 
-    public function destroy(Booking $booking)
+    public function edit(Booking $booking) // MODE EDITING SAAT SUDAH NGAJUIN
     {
-        if ($booking->user_id != auth()->id()) {
+        // Ensure user can only edit their own booking
+        if ($booking->user_id !== auth()->id()) {
             abort(403);
         }
 
+        // Only allow editing if pending
+        if ($booking->status !== 'pending') {
+            return back()->withErrors(['error' => 'Hanya booking dengan status pending yang bisa diedit.']);
+        }
+
+        $labs = Lab::all();
+        $hari = ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'];
+        $waktu = [
+            '07:30-09:10',
+            '09:15-10:55',
+            '11:00-12:40',
+            '13:55-15:30',
+            '15:55-17:30'
+        ];
+
+        return view('mahasiswa.booking.edit', compact('booking', 'labs', 'hari', 'waktu'));
+    }
+
+    public function update(Request $request, Booking $booking)
+    {
+        // Ensure user can only update their own booking
+        if ($booking->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // Only allow updating if pending
+        if ($booking->status !== 'pending') {
+            return back()->withErrors(['error' => 'Hanya booking dengan status pending yang bisa diupdate.']);
+        }
+
+        $validated = $request->validate([
+            'lab_id' => 'required|exists:labs,id',
+            'tanggal' => 'required|date|after_or_equal:today',
+            'waktu' => 'required|in:07:30-09:10,09:15-10:55,11:00-12:40,13:55-15:30,15:55-17:30',
+            'keperluan' => 'required|string|max:500',
+        ]);
+
+        // Get hari from tanggal
+        $tanggal = Carbon::parse($validated['tanggal']);
+        $hariIndo = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        $hari = $hariIndo[$tanggal->dayOfWeek];
+
+        // Validate hari (only Senin-Jumat)
+        if (!in_array($hari, ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat'])) {
+            return back()->withErrors(['tanggal' => 'Booking hanya bisa dilakukan untuk hari Senin sampai Jumat.'])->withInput();
+        }
+
+        // Check if already booked (exclude current booking)
+        $exists = Booking::where('lab_id', $validated['lab_id'])
+            ->where('tanggal', $validated['tanggal'])
+            ->where('waktu', $validated['waktu'])
+            ->where('id', '!=', $booking->id)
+            ->whereIn('status', ['pending', 'approved'])
+            ->exists();
+
+        if ($exists) {
+            return back()->withErrors(['labs' => 'Ruangan sudah dibooking pada waktu tersebut.'])->withInput();
+        }
+
+        $booking->update([
+            'lab_id' => $validated['lab_id'],
+            'hari' => $hari,
+            'tanggal' => $validated['tanggal'],
+            'waktu' => $validated['waktu'],
+            'keperluan' => $validated['keperluan'],
+        ]);
+
+        return redirect()->route('mahasiswa.dashboard')->with('success', 'Booking berhasil diupdate!');
+    }
+
+    public function destroy(Booking $booking)
+    {
+        // Ensure user can only delete their own booking
+        if ($booking->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        // Only allow deletion if pending
         if ($booking->status !== 'pending') {
             return back()->withErrors(['error' => 'Hanya booking dengan status pending yang bisa dihapus.']);
         }
